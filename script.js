@@ -21,7 +21,7 @@ function download_csv_file() {
     //merge the data with CSV
 
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += 'mac,last seen,last location,uniqueId,name\n';
+    csvContent += 'mac,last seen,last location,uniqueId,name,firmware\n';
     results.forEach(function (rowArray) {
         let row = rowArray.join(",");
         csvContent += row + "\r\n";
@@ -54,7 +54,7 @@ function getPresences() {
         fetch(`https://apps.cloud.us.kontakt.io/v3/presences?trackingId=${device.mac.toLowerCase()}`, requestOptions)
             .then(response => response.json())
             .then(result => {
-                results.push([result.content[0].trackingId, result.content[0].startTime.slice(0, 19), result.content[0].roomName, device.uniqueId, device.name])
+                results.push([result.content[0].trackingId, result.content[0].startTime.slice(0, 19), result.content[0].roomName, device.uniqueId, device.name, device.firmware])
                 //device.alias
                 display.innerText = `found positions of ${results.length} badges. Please wait...`
             })
@@ -69,7 +69,7 @@ const findMacs = (result) => {
         if (device.product === "Smart Badge") {
             console.log(device.mac)
 
-            macAddresses.push({ "mac": device.mac, "uniqueId": device.uniqueId, "name": device.name })
+            macAddresses.push({ "mac": device.mac, "uniqueId": device.uniqueId, "name": device.name, "firmware": device.firmware })
         }
     })
     console.log(macAddresses) //all badges here
