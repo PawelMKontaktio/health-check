@@ -12,6 +12,7 @@ input {
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
+
 }
 
 
@@ -19,7 +20,8 @@ input {
     display: none
 }
 
-button {
+button,
+input {
     padding: 5px 10px;
     background-color: rgb(230, 230, 230);
     border: 1px solid black;
@@ -34,11 +36,7 @@ button {
     background-color: lightblue;
 }
 
-input {
-    background-color: #fff;
-    border: 1px solid black;
-    padding: 5px 10px;
-}
+
 
 button:hover {
     background-color: lightblue;
