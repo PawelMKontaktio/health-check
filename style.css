@@ -1,11 +1,44 @@
-span {
-    display: inline-block;
-    min-width: 300px;
-    border-left: 1px solid black;
+div,
+span,
+button,
+input {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
+
 
 #download {
     display: none
+}
+
+button {
+    padding: 5px 10px;
+    background-color: #fff;
+    border: 1px solid black;
+    margin: 5px;
+}
+
+.glowing-border {
+    border-width: 3px;
+    outline: none;
+    border-color: lightblue;
+    box-shadow: 0 0 10px lightblue;
+}
+
+input {
+    background-color: #fff;
+    border: 1px solid black;
+    padding: 5px 10px;
+}
+
+button:hover {
+    background-color: lightblue;
+}
+
+#fetch {
+    min-width: 110px;
+
 }
 
 .lds-roller {
