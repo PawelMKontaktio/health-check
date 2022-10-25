@@ -7,17 +7,22 @@ let macAddresses = [];
 let presences = [];
 let currentTime = new Date();
 let results = [];
-let display = document.querySelector(".message")
-let buttonDownload = document.querySelector("#download")
-let buttonFetch = document.querySelector("#fetch")
-let spinner = document.querySelector(".lds-roller")
-let apiKeyInput = document.querySelector("#apiKey-input")
-let timezoneCST = document.querySelector("#cst")
-let timezoneUTC = document.querySelector("#utc")
-let timezoneCDT = document.querySelector("#cdt")
-let timezoneSelectDiv = document.querySelector(".timezone-select")
-let timezoneMessage = document.querySelector("#timezone-message")
+let resultsWithErrors = [];
+let display = document.querySelector(".message");
+let buttonDownload = document.querySelector("#download");
+let buttonFetch = document.querySelector("#fetch");
+let spinner = document.querySelector(".lds-roller");
+let apiKeyInput = document.querySelector("#apiKey-input");
+let timezoneCST = document.querySelector("#cst");
+let timezoneUTC = document.querySelector("#utc");
+let timezoneCDT = document.querySelector("#cdt");
+let timezoneSelectDiv = document.querySelector("#timezone-select");
+let timezoneMessage = document.querySelector("#timezone-message");
+let modelSelectDiv = document.querySelector("#model-select");
+let modelSelectAll = document.querySelector("#model-all");
+let modelSelectSmartBadge = document.querySelector("#model-smartbadge");
 let timezoneSelected = "utc";
+let modelSelected = "all";
 
 
 
@@ -97,46 +102,57 @@ function getPresences() {
             .then(response => response.json())
             .then(result => {
                 let endTime = '';
-                //console.log(result.content[0]);
+                console.log(result.content[0]);
                 //console.log(result.content[0].endTime);
-                if (result.content[0].endTime == undefined) {
-                    let currentTime = new Date();
-                    //console.log(currentTime, "currenttime");
-                    let year = currentTime.getUTCFullYear();
-                    let month = currentTime.getUTCMonth() + 1;
-                    if (month < 10) month = '0' + month
-                    let day = currentTime.getUTCDate();
-                    if (day < 10) day = '0' + day;
-                    let hour = currentTime.getUTCHours();
-                    if (hour < 10) hour = '0' + hour;
-                    let minute = currentTime.getUTCMinutes()
-                    if (minute < 10) minute = '0' + minute;
-                    let second = currentTime.getUTCSeconds()
-                    if (second < 10) second = '0' + second
-                    endTime = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+                if (result.content[0] === undefined) {
+                    resultsWithErrors.push("position missing")
                 } else {
-                    endTime = result.content[0].endTime.slice(0, 19)
-                }
-                //console.log(endTime);
-                results.push([result.content[0].trackingId, endTime, result.content[0].roomName, device.uniqueId, device.name, device.firmware])
-                //device.alias
+                    if (result.content[0].endTime == undefined) {
+                        let currentTime = new Date();
+                        //console.log(currentTime, "currenttime");
+                        let year = currentTime.getUTCFullYear();
+                        let month = currentTime.getUTCMonth() + 1;
+                        if (month < 10) month = '0' + month
+                        let day = currentTime.getUTCDate();
+                        if (day < 10) day = '0' + day;
+                        let hour = currentTime.getUTCHours();
+                        if (hour < 10) hour = '0' + hour;
+                        let minute = currentTime.getUTCMinutes()
+                        if (minute < 10) minute = '0' + minute;
+                        let second = currentTime.getUTCSeconds()
+                        if (second < 10) second = '0' + second
+                        endTime = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+                    } else {
+                        endTime = result.content[0].endTime.slice(0, 19)
+                    }
+                    //console.log(endTime);
+                    resultsWithErrors.push("ok")
+                    results.push([result.content[0].trackingId, endTime, result.content[0].roomName, device.uniqueId, device.name, device.firmware])
+                }//device.alias
                 display.innerText = `found positions of ${results.length} badges. Please wait...`
+                if (resultsWithErrors.length === macAddresses.length) {
+                    showResults()
+                }
             })
-            .catch(error => console.log('error', error));
     })
-    setTimeout(showResults, 15000)
-};
+        .catch(error => console.log('error', error));
+    //setTimeout(showResults, 15000)
+}
+
+
 
 const findMacs = (result) => {
-    //console.log(result.devices)
-    result.devices.forEach(device => {
-        if (device.product === "Smart Badge") {
-            //console.log(device.mac)
-
+    if (modelSelected === "smartbadge") {
+        result.devices.forEach(device => {
+            if (device.product === "Smart Badge") {
+                macAddresses.push({ "mac": device.mac, "uniqueId": device.uniqueId, "name": device.name, "firmware": device.firmware })
+            }
+        })
+    } else if (modelSelected === "all") {
+        result.devices.forEach(device => {
             macAddresses.push({ "mac": device.mac, "uniqueId": device.uniqueId, "name": device.name, "firmware": device.firmware })
-        }
-    })
-    //console.log(macAddresses) //all badges here
+        })
+    }
     display.innerText = `found ${macAddresses.length} badges, fetching positions...`
 }
 
@@ -201,16 +217,16 @@ const checkNumberOfBadges = () => {
 }
 const healthCheck = () => {
     if (apiKeyInput.value.length > 0) {
-        apiKey = apiKeyInput.value
+        apiKey = apiKeyInput.value;
         checkNumberOfBadges();
         timezoneSelectDiv.style.display = "none";
+        modelSelectDiv.style.display = "none";
         apiKeyInput.style.display = 'none';
-        // apiKeyInput.style.display = 'none';
         buttonFetch.style.display = 'none';
         spinner.style.display = "inline-block";
         timezoneMessage.style.display = "none";
     } else {
-        display.innerText = `input apiKey first`
+        display.innerText = `input apiKey first`;
     }
 }
 
@@ -234,4 +250,16 @@ timezoneCDT.addEventListener("click", function (e) {
     timezoneCST.classList.remove("glowing-border")
     timezoneUTC.classList.remove("glowing-border")
 })
+
+modelSelectAll.addEventListener("click", function (e) {
+    modelSelected = "all";
+    modelSelectAll.classList.add("glowing-border")
+    modelSelectSmartBadge.classList.remove("glowing-border")
+})
+modelSelectSmartBadge.addEventListener("click", function (e) {
+    modelSelected = "smartbadge"
+    modelSelectAll.classList.remove("glowing-border")
+    modelSelectSmartBadge.classList.add("glowing-border")
+})
 timezoneUTC.classList.add("glowing-border")
+modelSelectAll.classList.add("glowing-border")

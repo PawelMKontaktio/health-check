@@ -19,10 +19,15 @@
     <!-- <label for="utc">UTC</label> -->
     <!-- <input type="radio" name="timezone" id="cst" value="cst"> -->
     <!-- <label for="cst">CST</label> -->
-    <div class="timezone-select"><span id="timezone-message">Select Timezone for "last seen" field:</span>
+    <div id="timezone-select"><span id="timezone-message">Select Timezone for "last seen" field:</span>
         <button id="utc">UTC</button>
         <button id="cst">CST (UTC -06:00)</button>
         <button id="cdt">CDT (UTC -05:00)</button>
+    </div>
+    <div id="model-select">
+        <span id="model-message">Filtering by device model:</span>
+        <button id="model-all">All beacons</button>
+        <button id="model-smartbadge">Smart Badges</button>
     </div>
     <br>
     <input type="text" placeholder="apiKey" id="apiKey-input">
