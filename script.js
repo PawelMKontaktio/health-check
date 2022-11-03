@@ -35,45 +35,86 @@ function download_csv_file() {
     //merge the data with CSV
 
     let csvContent = "data:text/csv;charset=utf-8,";
-    csvContent += 'mac,last seen,last location,uniqueId,name,firmware\n';
+    csvContent += 'mac,location entered,last seen,last location,uniqueId,name,firmware\n';
     results.forEach(function (rowArray) {
-        let dateToBeConverted = new Date(rowArray[1])
-        //console.log(dateToBeConverted, "dateToBeConverted")
-        let currentTimeUTC = new Date(Date.UTC())
+        if (rowArray[1] !== "") {
+            let dateToBeConverted = new Date(rowArray[1])
+            //console.log(dateToBeConverted, "dateToBeConverted")
+            let currentTimeUTC = new Date(Date.UTC())
 
-        let unixDateToBeConverted = Math.floor(dateToBeConverted.getTime() / 1000);
-        let unixDateAfterConversion = 0;
-        //console.log(unixDateToBeConverted, "unixDateToBeConverted")
-        //console.log(timezoneSelected)
+            let unixDateToBeConverted = Math.floor(dateToBeConverted.getTime() / 1000);
+            let unixDateAfterConversion = 0;
+            //console.log(unixDateToBeConverted, "unixDateToBeConverted")
+            //console.log(timezoneSelected)
 
-        if (timezoneSelected === "cst") {
-            timeOffset = -21600;
-        } else if (timezoneSelected === "cdt") {
-            timeOffset = -18000;
-        } else if (timezoneSelected === "est") {
-            timeOffset = -14400;
+            if (timezoneSelected === "cst") {
+                timeOffset = -21600;
+            } else if (timezoneSelected === "cdt") {
+                timeOffset = -18000;
+            } else if (timezoneSelected === "est") {
+                timeOffset = -14400;
+            }
+            //console.log(timeOffset, "timeOffset")
+            unixDateAfterConversion = unixDateToBeConverted + timeOffset;
+            let dateAfterConversion = new Date(unixDateAfterConversion * 1000);
+            let year = dateAfterConversion.getFullYear();
+            let month = dateAfterConversion.getMonth() + 1;
+            if (month < 10) month = '0' + month
+            let day = dateAfterConversion.getDate();
+            if (day < 10) day = '0' + day;
+            let hour = dateAfterConversion.getHours();
+            if (hour < 10) hour = '0' + hour;
+            let minute = dateAfterConversion.getMinutes()
+            if (minute < 10) minute = '0' + minute;
+            let second = dateAfterConversion.getSeconds()
+            if (second < 10) second = '0' + second
+            let dateAfterConversionFormatted = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+            //console.log(unixDateAfterConversion, "unixDateAfterConversion")
+            //console.log(dateAfterConversion, "dateAfterConversion")
+            //console.log(dateAfterConversionFormatted, "dateAfterConversionFormatted")
+            //let stringDateAfterConversion = dateAfterConversion.toString();
+            //console.log(stringDateAfterConversion, "stringDateAfterConversion")
+            rowArray[1] = dateAfterConversionFormatted
         }
-        //console.log(timeOffset, "timeOffset")
-        unixDateAfterConversion = unixDateToBeConverted + timeOffset;
-        let dateAfterConversion = new Date(unixDateAfterConversion * 1000);
-        let year = dateAfterConversion.getFullYear();
-        let month = dateAfterConversion.getMonth() + 1;
-        if (month < 10) month = '0' + month
-        let day = dateAfterConversion.getDate();
-        if (day < 10) day = '0' + day;
-        let hour = dateAfterConversion.getHours();
-        if (hour < 10) hour = '0' + hour;
-        let minute = dateAfterConversion.getMinutes()
-        if (minute < 10) minute = '0' + minute;
-        let second = dateAfterConversion.getSeconds()
-        if (second < 10) second = '0' + second
-        let dateAfterConversionFormatted = `${year}-${month}-${day}T${hour}:${minute}:${second}`
-        //console.log(unixDateAfterConversion, "unixDateAfterConversion")
-        //console.log(dateAfterConversion, "dateAfterConversion")
-        //console.log(dateAfterConversionFormatted, "dateAfterConversionFormatted")
-        //let stringDateAfterConversion = dateAfterConversion.toString();
-        //console.log(stringDateAfterConversion, "stringDateAfterConversion")
-        rowArray[1] = dateAfterConversionFormatted
+        if (rowArray[2] !== "never") {
+            let dateToBeConverted2 = new Date(rowArray[2])
+            //console.log(dateToBeConverted, "dateToBeConverted")
+            let currentTimeUTC = new Date(Date.UTC())
+
+            let unixDateToBeConverted2 = Math.floor(dateToBeConverted2.getTime() / 1000);
+            let unixDateAfterConversion2 = 0;
+            //console.log(unixDateToBeConverted, "unixDateToBeConverted")
+            //console.log(timezoneSelected)
+
+            if (timezoneSelected === "cst") {
+                timeOffset = -21600;
+            } else if (timezoneSelected === "cdt") {
+                timeOffset = -18000;
+            } else if (timezoneSelected === "est") {
+                timeOffset = -14400;
+            }
+            //console.log(timeOffset, "timeOffset")
+            unixDateAfterConversion2 = unixDateToBeConverted2 + timeOffset;
+            let dateAfterConversion2 = new Date(unixDateAfterConversion2 * 1000);
+            let year = dateAfterConversion2.getFullYear();
+            let month = dateAfterConversion2.getMonth() + 1;
+            if (month < 10) month = '0' + month
+            let day = dateAfterConversion2.getDate();
+            if (day < 10) day = '0' + day;
+            let hour = dateAfterConversion2.getHours();
+            if (hour < 10) hour = '0' + hour;
+            let minute = dateAfterConversion2.getMinutes()
+            if (minute < 10) minute = '0' + minute;
+            let second = dateAfterConversion2.getSeconds()
+            if (second < 10) second = '0' + second
+            let dateAfterConversionFormatted2 = `${year}-${month}-${day}T${hour}:${minute}:${second}`
+            //console.log(unixDateAfterConversion, "unixDateAfterConversion")
+            //console.log(dateAfterConversion, "dateAfterConversion")
+            //console.log(dateAfterConversionFormatted, "dateAfterConversionFormatted")
+            //let stringDateAfterConversion = dateAfterConversion.toString();
+            //console.log(stringDateAfterConversion, "stringDateAfterConversion")
+            rowArray[2] = dateAfterConversionFormatted2
+        }
         let row = rowArray.join(",");
         csvContent += row + "\r\n";
     });
@@ -105,10 +146,11 @@ function getPresences() {
             .then(response => response.json())
             .then(result => {
                 let endTime = '';
-                console.log(result.content[0]);
+
                 //console.log(result.content[0].endTime);
                 if (result.content[0] === undefined) {
-                    resultsWithErrors.push("position missing")
+                    results.push([device.mac, "", "never", "", device.uniqueId, device.name, device.firmware])
+                    console.log(results);
                 } else {
                     if (result.content[0].endTime == undefined) {
                         let currentTime = new Date();
@@ -130,15 +172,17 @@ function getPresences() {
                     }
                     //console.log(endTime);
                     resultsWithErrors.push("ok")
-                    results.push([result.content[0].trackingId, endTime, result.content[0].roomName, device.uniqueId, device.name, device.firmware])
+                    results.push([result.content[0].trackingId, result.content[0].startTime.slice(0, 19), endTime, result.content[0].roomName, device.uniqueId, device.name, device.firmware])
                 }//device.alias
                 display.innerText = `found positions of ${results.length} badges. Please wait...`
-                if (resultsWithErrors.length === macAddresses.length) {
+                //console.log(results);
+                if (results.length === macAddresses.length) {
                     showResults()
                 }
             })
+            .catch(error => console.log('error', error));
     })
-        .catch(error => console.log('error', error));
+
     //setTimeout(showResults, 15000)
 }
 
