@@ -16,6 +16,7 @@ let apiKeyInput = document.querySelector("#apiKey-input");
 let timezoneCST = document.querySelector("#cst");
 let timezoneUTC = document.querySelector("#utc");
 let timezoneCDT = document.querySelector("#cdt");
+let timezoneEST = document.querySelector("#est");
 let timezoneSelectDiv = document.querySelector("#timezone-select");
 let timezoneMessage = document.querySelector("#timezone-message");
 let modelSelectDiv = document.querySelector("#model-select");
@@ -49,6 +50,8 @@ function download_csv_file() {
             timeOffset = -21600;
         } else if (timezoneSelected === "cdt") {
             timeOffset = -18000;
+        } else if (timezoneSelected === "est") {
+            timeOffset = -14400;
         }
         //console.log(timeOffset, "timeOffset")
         unixDateAfterConversion = unixDateToBeConverted + timeOffset;
@@ -237,16 +240,26 @@ timezoneUTC.addEventListener("click", function (e) {
     timezoneUTC.classList.add("glowing-border")
     timezoneCST.classList.remove("glowing-border")
     timezoneCDT.classList.remove("glowing-border")
+    timezoneEST.classList.remove("glowing-border")
 })
 timezoneCST.addEventListener("click", function (e) {
     timezoneSelected = "cst"
     timezoneCST.classList.add("glowing-border")
     timezoneUTC.classList.remove("glowing-border")
     timezoneCDT.classList.remove("glowing-border")
+    timezoneEST.classList.remove("glowing-border")
 })
 timezoneCDT.addEventListener("click", function (e) {
     timezoneSelected = "cdt"
     timezoneCDT.classList.add("glowing-border")
+    timezoneCST.classList.remove("glowing-border")
+    timezoneUTC.classList.remove("glowing-border")
+    timezoneEST.classList.remove("glowing-border")
+})
+timezoneEST.addEventListener("click", function (e) {
+    timezoneSelected = "est"
+    timezoneEST.classList.add("glowing-border")
+    timezoneCDT.classList.remove("glowing-border")
     timezoneCST.classList.remove("glowing-border")
     timezoneUTC.classList.remove("glowing-border")
 })
